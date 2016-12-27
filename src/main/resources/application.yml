@@ -1,0 +1,29 @@
+server:
+  port: 8085
+
+
+info:
+  component: Java edge server for greeting folks
+
+service:
+  defaultMinMs: 0
+  defaultMaxMs: 0
+
+logging:
+  level:
+    root: WARN
+    se.sadhal: INFO
+
+---
+# For deployment in Docker containers orchestrated in Kubernetes!!!
+spring:
+  profiles: docker-sadhal
+server:
+  port: 8085
+
+---
+# For deployment in local terminal
+spring:
+  profiles: test-sadhal
+server:
+  port: 8085
