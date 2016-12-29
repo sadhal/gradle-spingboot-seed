@@ -18,4 +18,10 @@ public class RestResource {
 
         return "Hello, world!";
     }
+    
+    @RequestMapping(value = "/healthz", method = RequestMethod.GET)
+    public String healthz() {
+        LOG.info("/healthz called");
+        return hello();
+    }
 }
