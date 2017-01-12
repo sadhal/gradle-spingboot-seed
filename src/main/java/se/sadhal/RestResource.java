@@ -44,7 +44,7 @@ public class RestResource {
         return new PersonService(mongo());
     }
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    @RequestMapping(value = "/personer", method = RequestMethod.GET)
     public ResponseEntity<?> personer() {
         LOG.info("/personer called");
 
