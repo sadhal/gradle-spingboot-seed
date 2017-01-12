@@ -7,9 +7,9 @@ import static org.junit.Assert.*;
  */
 public class RestResourceTest {
     @org.junit.Test
-    public void hello() throws Exception {
+    public void test_hello() throws Exception {
         RestResource rr = new RestResource();
-        assertEquals("Hello, world!", rr.hello());
+        assertEquals("Hello, openshift developer preview (NextGen)!", rr.hello());
     }
 
 }

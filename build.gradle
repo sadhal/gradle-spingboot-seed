@@ -14,6 +14,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 jar {
@@ -34,4 +35,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	compile('org.mongodb:mongodb-driver:3.4.1')
+	//compile('org.mongodb:mongodb-driver-async:3.4.1')
+	testCompile('com.github.fakemongo:fongo:2.0.6')
 }
