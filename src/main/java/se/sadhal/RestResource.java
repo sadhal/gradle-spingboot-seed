@@ -34,6 +34,16 @@ public class RestResource {
     @RequestMapping(value = "/healthz", method = RequestMethod.GET)
     public String healthz() {
         LOG.info("/healthz called");
+
+        String host = System.getenv("MONGODB_SERVICE_HOST");
+        String port = System.getenv("MONGODB_SERVICE_PORT");
+
+        LOG.info("mongo host {}, port {}", host, port);
+        if (host == null || port == null) {
+            LOG.error("mongodb host eller port env var saknas");
+            throw new RuntimeException("mongodb host eller port env var saknas");
+        }
+
         return "hello from /healthz endpoint";
     }
 
@@ -65,15 +75,25 @@ public class RestResource {
 
     private static MongoDatabase mongo() throws Exception {
         String host = System.getenv("MONGODB_SERVICE_HOST");
-        LOG.info("mongo host {}", host);
-        if (host == null) {
-            MongoClient mongoClient = new MongoClient("localhost");
-            return mongoClient.getDatabase("sampledb");
-        }
         int port = Integer.parseInt(System.getenv("MONGODB_SERVICE_PORT"));
+
+        LOG.info("mongo host {}, port {}", host, port);
+        if (host == null || port < 1) {
+            LOG.error("mongodb host eller port env var saknas");
+            throw new RuntimeException("mongodb host eller port env var saknas");
+        }
+
+
+        // should inject from application.yml
         String dbname = System.getenv("MONGODB_DATABASE");
+        dbname = dbname != null ? dbname : "sampledb";
+
         String username = System.getenv("MONGODB_USER");
+        username = username != null ? username : "sadhal";
+
         String password = System.getenv("MONGODB_PASSWORD");
+        password = password != null ? password : "sadhal";
+
         LOG.info("mongo port {}, dbname {}, username {}, password {}", port, dbname, username, password);
         MongoCredential credential = MongoCredential.createCredential(username, dbname, password.toCharArray());
         MongoClient mongoClient = new MongoClient(new ServerAddress(host, port),
