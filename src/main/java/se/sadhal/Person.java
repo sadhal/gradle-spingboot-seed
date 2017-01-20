@@ -27,4 +27,12 @@ public class Person {
     public Date getCreatedOn() {
         return createdOn;
     }
+
+    public Document getDocument() {
+        Document doc = new Document("name", getName()).
+                append("username", getUsername()).
+                append("createdOn", getCreatedOn());
+
+        return doc;
+    }
 }

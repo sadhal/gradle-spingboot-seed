@@ -73,6 +73,18 @@ public class RestResource {
         }
     }
 
+    @RequestMapping(value = "/personer", method = RequestMethod.POST)
+    public void save(Person person) {
+        LOG.info("/personer POST called {}", person);
+
+        try {
+            LOG.info("saving person to mongodb");
+            getPersonService().save(person);
+        } catch (Exception e) {
+            LOG.error("Ett fel inträffade", e);
+        }
+    }
+
     private static MongoDatabase mongo() throws Exception {
         String host = System.getenv("MONGODB_SERVICE_HOST");
         int port = Integer.parseInt(System.getenv("MONGODB_SERVICE_PORT"));
