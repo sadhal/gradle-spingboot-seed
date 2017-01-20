@@ -1,12 +1,12 @@
 package se.sadhal;
 
+import com.mongodb.Block;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -25,6 +25,7 @@ public class PersonService {
     public List<Person> findAll() {
         List<Person> personer = new ArrayList<>();
 
+        /*
         List<Document> documents;
         documents = (List<Document>)collection.find().into(new ArrayList<>());
 
@@ -32,6 +33,14 @@ public class PersonService {
                 stream().
                 map(document -> new Person(document)).
                 collect(Collectors.toList());
+        */
+
+        collection.find().forEach(new Block<Document>() {
+            @Override
+            public void apply(Document document) {
+                personer.add(new Person(document));
+            }
+        });
 
         return personer;
     }
