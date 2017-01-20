@@ -40,3 +40,9 @@ dependencies {
 	//compile('org.mongodb:mongodb-driver-async:3.4.1')
 	testCompile('com.github.fakemongo:fongo:2.0.6')
 }
+
+/*
+bootRun {
+	environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: "test-sadhal"
+}
+*/

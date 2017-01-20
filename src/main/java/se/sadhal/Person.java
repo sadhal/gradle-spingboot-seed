@@ -13,6 +13,8 @@ public class Person {
     private String username;
     private Date createdOn = new Date();
 
+    public Person() {}
+
     public Person(Document document) {
         this.id = document.getObjectId("_id").toString();
         //this.id = ((ObjectId) dbObject.get("_id")).toString();
@@ -35,4 +37,9 @@ public class Person {
 
         return doc;
     }
+
+    public void setId(String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setUsername(String username) { this.username = username; }
+    public void setCreatedOn(Date date) { this.createdOn = date; }
 }

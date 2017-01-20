@@ -9,12 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -74,14 +73,19 @@ public class RestResource {
     }
 
     @RequestMapping(value = "/personer", method = RequestMethod.POST)
-    public void save(Person person) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void save(@RequestBody Person person) {
         LOG.info("/personer POST called {}", person);
 
-        try {
-            LOG.info("saving person to mongodb");
-            getPersonService().save(person);
-        } catch (Exception e) {
-            LOG.error("Ett fel inträffade", e);
+        if (Objects.nonNull(person)) {
+            try {
+                LOG.info("saving person to mongodb");
+                getPersonService().save(person);
+            } catch (Exception e) {
+                LOG.error("Ett fel inträffade", e);
+            }
+        } else {
+            LOG.error("person is null and that is just not cool!");
         }
     }
 
