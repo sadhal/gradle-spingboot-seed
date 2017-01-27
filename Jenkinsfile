@@ -3,13 +3,13 @@ node('java') {
     echo 'hello from pipeline'
   }
   stage('build') {
-    openshiftBuild(buildConfig: 'helloworldapp', showBuildLogs: 'true')
+    openshiftBuild(buildConfig: 'gradle-spingboot-seed', showBuildLogs: 'true')
   }
   stage('test') {
     echo 'starting ./gradlew test'
     sh './gradlew test'
   }
   stage('deploy') {
-    openshiftDeploy(deploymentConfig: 'helloworldapp')
+    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed')
   }
 }
