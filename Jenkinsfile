@@ -1,4 +1,4 @@
-node {
+node('maven') {
   stage('greeting') {
     echo 'hello from pipeline'
     sh 'ls -la'
@@ -8,7 +8,7 @@ node {
     openshiftBuild(buildConfig: 'gradle-spingboot-seed', showBuildLogs: 'true')
   }
   stage('Dockerize') {
-    echo "docker dry run"
+    echo 'docker dry run'
   }
   stage('deploy') {
     openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed')
