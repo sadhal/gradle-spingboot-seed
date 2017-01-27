@@ -1,4 +1,4 @@
-node('java') {
+node('master') {
   stage('greeting') {
     echo 'hello from pipeline'
   }
