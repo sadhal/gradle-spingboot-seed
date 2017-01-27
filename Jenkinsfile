@@ -1,11 +1,11 @@
-node {
+node('java8') {
   stage('greeting') {
     echo 'hello from pipeline'
   }
   //stage('build') { openshiftBuild(buildConfig: 'gradle-spingboot-seed', showBuildLogs: 'true') }
-  stage('Checkout') {
-    git branch: 'jenkinsfile', url: 'https://github.com/sadhal/gradle-spingboot-seed.git'
-  }
+  //stage('Checkout') {
+  //  git branch: 'jenkinsfile', url: 'https://github.com/sadhal/gradle-spingboot-seed.git'
+  //}
   stage('Build') {
     sh "./gradlew clean build -x test"
   }
