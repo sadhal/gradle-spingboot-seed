@@ -1,4 +1,4 @@
-node('java8') {
+node('maven') {
   stage('greeting') {
     echo 'hello from pipeline'
   }
