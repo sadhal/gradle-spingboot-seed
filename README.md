@@ -13,7 +13,8 @@ To get you started you can simply clone repository and run ./gradlew bootRun to 
 oc cluster up
 
 # Log in as developer in to the Web Console and CLI. Links and instructions are provided by oc cluster up command.
-# Add to project - jenkins pipeline. Even ephemeral works for this demo.
+# Add to project - jenkins pipeline. Even ephemeral works for this demo. 
+# Log in to jenkins with openshift credentials.
 
 # create the spring boot application with builder-image and correct branch
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#jenkinsfile2
