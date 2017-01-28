@@ -9,7 +9,7 @@ public class RestResourceTest {
     @org.junit.Test
     public void hello() throws Exception {
         RestResource rr = new RestResource();
-        assertEquals("Hello, openshift developer preview (NextGen)!", rr.hello());
+        assertEquals("Hello, world!", rr.hello());
     }
 
 }
