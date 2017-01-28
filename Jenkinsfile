@@ -10,9 +10,9 @@ node('maven') {
   }
   stage('Build image') { 
     sh 'ls -la'
-    openshiftBuild(buildConfig: 'gradle-spingboot-seed', showBuildLogs: 'true')
+    openshiftBuild(buildConfig: 'gradle-spingboot-seed', showBuildLogs: 'true', namespace: 'contacts-dev')
   }
   stage('deploy') {
-    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed')
+    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-dev')
   }
 }
