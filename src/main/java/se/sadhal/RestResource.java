@@ -16,7 +16,7 @@ public class RestResource {
     public String hello() {
         LOG.info("/hello called");
 
-        return "Hello, openshift developer preview (NextGen)!";
+        return "Hello, world!";
     }
     
     @RequestMapping(value = "/healthz", method = RequestMethod.GET)
