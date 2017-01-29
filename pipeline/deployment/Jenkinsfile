@@ -10,10 +10,6 @@ node('maven') {
       tag = "green"
       altTag = "blue"
     }
-    sh "oc get route ${appName}-${tag} -n ${project} -o jsonpath='{ .spec.host }' > routehost"
-    routeHost = readFile('routehost').trim()
-    echo "routeHost: " + routeHost
-    routeHost = routeHost + "/hello"
   }
   stage('Build image') {
     echo "building tag ${tag}"
@@ -24,6 +20,10 @@ node('maven') {
     openshiftVerifyDeployment deploymentConfig: "${appName}-${tag}", namespace: project
   }
   stage("Test") {
+    sh "oc get route ${appName}-${tag} -n ${project} -o jsonpath='{ .spec.host }' > routehost"
+    routeHost = readFile('routehost').trim()
+    echo "routeHost: " + routeHost
+    routeHost = routeHost + "/hello"
     input message: "Test deployment: http://${routeHost}. Approve?", id: "approval"
   }
   stage("Go Live") {
