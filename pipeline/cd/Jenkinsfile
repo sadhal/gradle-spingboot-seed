@@ -4,7 +4,7 @@ node('maven') {
     sh 'ls -la'
     sh 'env | sort'
   }
-  parallell(
+  parallel(
     'Stream integration tests' : { 
       node('maven') {
         echo 'echo from integration tests stream'
