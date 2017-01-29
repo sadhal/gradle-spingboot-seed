@@ -2,6 +2,7 @@ node('maven') {
   stage('Greeting') {
     echo 'hello from pipeline'
     sh 'ls -la'
+    sh 'env | sort'
   }
   stage('Checkout and Unit test') {
     git branch: 'jenkinsfile2', url: 'https://github.com/sadhal/gradle-spingboot-seed.git'
