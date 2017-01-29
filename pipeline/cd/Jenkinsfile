@@ -4,6 +4,22 @@ node('maven') {
     sh 'ls -la'
     sh 'env | sort'
   }
+  parallell(
+    'Stream integration tests' : { 
+      node('maven') {
+        echo 'echo from integration tests stream'
+        sh "sleep 20s" 
+        sh "echo stream1"
+      } 
+    },
+    'Stream perf tests' : { 
+      node('maven') {
+        echo 'echo from perf tests stream'
+        sh "sleep 10s" 
+        sh "echo stream2"                                                   
+      } 
+    }
+  )
   stage('Checkout and Unit test') {
     git branch: 'jenkinsfile2', url: 'https://github.com/sadhal/gradle-spingboot-seed.git'
     echo 'starting ./gradlew test'
