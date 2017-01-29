@@ -18,8 +18,9 @@ oc new-project jenkins
 oc new-project contacts-dev
 oc new-project contacts-test
 
-# Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. 
-# Log in to jenkins with openshift credentials.
+# Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
+oc new-app --template=jenkins-ephemeral -n jenkins
+# Log in to jenkins with openshift credentials via Web Console.
 
 # Log in as system:admin in CLI in order to edit user policies for jenkins:
 oc login -u system:admin
