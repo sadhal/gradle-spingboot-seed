@@ -30,17 +30,17 @@ oc login -u developer -p developer
 
 # Let's create our demo app based on spring boot with builder-image. We will do it in both dev and test projects!
 oc project contacts-dev
-oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#jenkinsfile2
+oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
 oc project contacts-test
-oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#jenkinsfile2
+oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
 
 # Now we will create two pipelines for building and deploying application in dev and test env. Pipeline will exist in our jenkins project.
 oc project jenkins
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#jenkinsfile2 --strategy=pipeline --context-dir='pipeline/dev' --name gradlespringboot-pipeline-dev
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#jenkinsfile2 --strategy=pipeline --context-dir='pipeline/test' --name gradlespringboot-pipeline-test
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/dev' --name gradlespringboot-pipeline-dev
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/test' --name gradlespringboot-pipeline-test
 
 # Or we could have just one pipeline that goes all the way from CI to CD in different environments. 
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#jenkinsfile2 --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
 
 ```
 
