@@ -1,0 +1,53 @@
+node('maven') {
+  stage('Greeting') {
+    echo 'hello from pipeline'
+    sh 'ls -la'
+    sh 'env | sort'
+  }
+  stage('Checkout and Unit test') {
+    git branch: 'jenkinsfile2', url: 'https://github.com/sadhal/gradle-spingboot-seed.git'
+    echo 'starting ./gradlew test'
+    sh './gradlew test'
+  }
+  stage('Build image') { 
+    sh 'ls -la'
+    openshiftBuild(buildConfig: 'gradle-spingboot-seed', showBuildLogs: 'true', namespace: 'contacts-dev')
+  }
+  stage('Deploy DEV') {
+    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-dev')
+    echo 'Verifying deployment'
+    openshiftVerifyDeployment(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-dev')
+  }
+  stage('Integration tests') {
+    echo 'Run HTTP-api integration tests with tools such as Cornichon'
+  }
+  stage('Performance tests') {
+    echo 'Run perf tests with tools such as Gattling'
+  }
+  stage('Tag docker image') {
+    openshiftTag(namespace: 'contacts-dev', sourceStream: 'gradle-spingboot-seed', sourceTag: 'latest', destinationNamespace: 'contacts-test', destinationStream: 'gradle-spingboot-seed', destinationTag: 'latest')
+  }
+  stage('Deploy QA') {
+    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-test')
+    echo 'Verifying deployment'
+    openshiftVerifyDeployment(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-test')
+  }
+}
+/*
+  parallel(
+    'Stream integration tests' : { 
+      node('maven') {
+        echo 'echo from integration tests stream'
+        sh "sleep 20s" 
+        sh "echo stream1"
+      } 
+    },
+    'Stream perf tests' : { 
+      node('maven') {
+        echo 'echo from perf tests stream'
+        sh "sleep 10s" 
+        sh "echo stream2"                                                   
+      } 
+    }
+  )
+*/
