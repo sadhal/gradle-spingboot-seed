@@ -15,8 +15,8 @@ oc cluster up
 # Log in as developer in to the Web Console and CLI. Links and instructions are provided by oc cluster up command.
 # Create projects for demo:
 oc new-project jenkins
-oc new-project contacts-dev
-oc new-project contacts-test
+oc new-project contacts-be-dev
+oc new-project contacts-be-test
 
 # Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
 oc new-app --template=jenkins-ephemeral -n jenkins
@@ -24,14 +24,14 @@ oc new-app --template=jenkins-ephemeral -n jenkins
 
 # Log in as system:admin in CLI in order to edit user policies for jenkins:
 oc login -u system:admin
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-dev
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-test
+oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-be-dev
+oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-be-test
 oc login -u developer -p developer
 
 # Let's create our demo app based on spring boot with builder-image. We will do it in both dev and test projects!
-oc project contacts-dev
+oc project contacts-be-dev
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
-oc project contacts-test
+oc project contacts-be-test
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
 
 # Now we will create two pipelines for building and deploying application in dev and test env. Pipeline will exist in our jenkins project.
