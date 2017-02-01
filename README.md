@@ -7,7 +7,7 @@ The seed app doesn't do much, by default it is listening on path ```/hello``` an
 ## Getting Started
 To get you started you can simply clone repository and run ./gradlew bootRun to start server. Gradle and spring will start with downloading dependencies.
 
-## Setting up openshift project
+## Setting up openshift projects
 ```
 # Fire up cluster
 oc cluster up
@@ -46,6 +46,18 @@ oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=
 oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
 
 ```
+
+### Demo database
+
+```
+# Create new mongodb-ephemeral from template
+oc new-app https://raw.githubusercontent.com/sadhal/openshift-config/master/mongodb-ephemeral-template.json -p MONGODB_DATABASE=sampledb -p MONGODB_USER=sadhal -p MONGODB_PASSWORD=sadhal -n contacts-be-dev
+
+# Start deployment
+oc rollout latest mongodb
+
+```
+
 
 ### Prerequisites
 Latest openshift origin CLI client (>= 1.4), docker (>= 1.12) and virtualization enabled.
