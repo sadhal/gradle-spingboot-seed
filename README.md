@@ -31,11 +31,14 @@ oc login -u developer -p developer
 # Let's create our demo app based on spring boot with builder-image. We will do it in both dev and test projects!
 oc project contacts-be-dev
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
+oc expose service gradle-spingboot-seed --path=/hello
 oc project contacts-be-test
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
+oc expose service gradle-spingboot-seed --path=/hello
+
+oc project jenkins
 
 # Now we will create two pipelines for building and deploying application in dev and test env. Pipeline will exist in our jenkins project.
-oc project jenkins
 oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/dev' --name gradlespringboot-pipeline-dev
 oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/test' --name gradlespringboot-pipeline-test
 
