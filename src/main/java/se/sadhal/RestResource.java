@@ -27,7 +27,7 @@ public class RestResource {
     public String hello() {
         LOG.info("/hello called");
 
-        return "Hello, openshift!";
+        return "Hello, world!";
     }
 
     @RequestMapping(value = "/healthz", method = RequestMethod.GET)
