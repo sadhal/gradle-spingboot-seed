@@ -50,7 +50,7 @@ oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=
 ### Demo database
 
 ```
-# Create new mongodb-ephemeral from template
+# Create new mongodb-ephemeral from template. It will create mongodb app in contacts-be-dev
 oc new-app https://raw.githubusercontent.com/sadhal/openshift-config/master/mongodb-ephemeral-template.json -p MONGODB_DATABASE=sampledb -p MONGODB_USER=sadhal -p MONGODB_PASSWORD=sadhal -n contacts-be-dev
 
 # Start deployment
@@ -58,6 +58,14 @@ oc rollout latest mongodb
 
 ```
 
+### Demo frontend app
+
+```
+# Create new angularjs app backed up by nodejs
+oc new-app https://github.com/sadhal/mean-contactlist.git
+oc expose svc mean-contactlist
+
+```
 
 ### Prerequisites
 Latest openshift origin CLI client (>= 1.4), docker (>= 1.12) and virtualization enabled.
