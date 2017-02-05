@@ -4,42 +4,48 @@ import org.bson.Document;
 
 import java.util.Date;
 
-/**
- * Created by sadmir on 2017-01-12.
- */
 public class Person {
     private String id;
-    private String name;
-    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String twitterHandle;
     private Date createdOn = new Date();
 
     public Person() {}
 
     public Person(Document document) {
         this.id = document.getObjectId("_id").toString();
-        //this.id = ((ObjectId) dbObject.get("_id")).toString();
-        this.name = document.getString("name");
-        this.username = document.getString("username");
+        this.firstName = document.getString("firstName");
+        this.lastName = document.getString("lastName");
+        this.email = document.getString("email");
+        this.twitterHandle = document.getString("twitterHandle");
         this.createdOn = document.getDate("createdOn");
     }
 
-    public String getName() { return this.name; }
-    public String getUsername() { return this.username; }
-
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public Document getDocument() {
-        Document doc = new Document("name", getName()).
-                append("username", getUsername()).
-                append("createdOn", getCreatedOn());
+    public Document createDocument() {
+        Document doc = new Document("firstName", getFirstName())
+                .append("lastName", getLastName())
+                .append("email", getEmail())
+                .append("twitterHandle", getTwitterHandle())
+                .append("createdOn", getCreatedOn());
 
         return doc;
     }
 
     public void setId(String id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setUsername(String username) { this.username = username; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setEmail(String email) { this.email = email; }
+    public void setTwitterHandle(String twitterHandle) { this.twitterHandle = twitterHandle; }
     public void setCreatedOn(Date date) { this.createdOn = date; }
+
+    public String getId() { return id; }
+    public String getFirstName() { return this.firstName; }
+    public String getLastName() { return this.lastName; }
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+    public String getEmail() { return email; }
+    public String getTwitterHandle() { return twitterHandle; }
 }

@@ -39,11 +39,11 @@ oc expose service gradle-spingboot-seed --path=/hello
 oc project jenkins
 
 # Now we will create two pipelines for building and deploying application in dev and test env. Pipeline will exist in our jenkins project.
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/dev' --name gradlespringboot-pipeline-dev
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/test' --name gradlespringboot-pipeline-test
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/dev' --firstName gradlespringboot-pipeline-dev
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/test' --firstName gradlespringboot-pipeline-test
 
 # Or we could have just one pipeline that goes all the way from CI to CD in different environments. 
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --firstName gradlespringboot-pipeline-cd
 
 ```
 

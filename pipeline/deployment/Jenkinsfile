@@ -4,7 +4,7 @@ node('maven') {
   def tag="blue"
   def altTag="green"
   stage("Initialize") {
-    sh "oc get route ${appName} -n ${project} -o jsonpath='{ .spec.to.name }' > activeservice"
+    sh "oc get route ${appName} -n ${project} -o jsonpath='{ .spec.to.firstName }' > activeservice"
     activeService = readFile('activeservice').trim()
     if (activeService == "${appName}-blue") {
       tag = "green"

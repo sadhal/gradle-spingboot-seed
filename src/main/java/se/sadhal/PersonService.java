@@ -25,16 +25,6 @@ public class PersonService {
     public List<Person> findAll() {
         List<Person> personer = new ArrayList<>();
 
-        /*
-        List<Document> documents;
-        documents = (List<Document>)collection.find().into(new ArrayList<>());
-
-        personer = documents.
-                stream().
-                map(document -> new Person(document)).
-                collect(Collectors.toList());
-        */
-
         collection.find().forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
@@ -46,7 +36,7 @@ public class PersonService {
     }
 
     public void save(Person person) {
-        Document doc = person.getDocument();
+        Document doc = person.createDocument();
         collection.insertOne(doc);
     }
 }
