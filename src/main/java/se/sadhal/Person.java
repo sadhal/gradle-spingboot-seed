@@ -15,7 +15,9 @@ public class Person {
     public Person() {}
 
     public Person(Document document) {
-        this.id = document.getObjectId("_id").toString();
+        if (document.getObjectId("_id") != null)
+            this.id = document.getObjectId("_id").toString();
+
         this.firstName = document.getString("firstName");
         this.lastName = document.getString("lastName");
         this.email = document.getString("email");
@@ -29,6 +31,9 @@ public class Person {
                 .append("email", getEmail())
                 .append("twitterHandle", getTwitterHandle())
                 .append("createdOn", getCreatedOn());
+
+        if (getId() != null)
+            doc.append("_id", getId());
 
         return doc;
     }

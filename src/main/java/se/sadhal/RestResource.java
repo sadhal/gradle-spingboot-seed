@@ -46,11 +46,15 @@ public class RestResource {
         return "hello from /healthz endpoint";
     }
 
-    public PersonService getPersonService() throws Exception {
+    private PersonService getPersonService() throws Exception {
         if (personService != null)
             return personService;
 
         return new PersonService(mongo());
+    }
+
+    protected void setPersonService(PersonService ps) {
+        personService = ps;
     }
 
     @RequestMapping(value = "/personer", method = RequestMethod.GET)
@@ -74,18 +78,25 @@ public class RestResource {
 
     @RequestMapping(value = "/personer", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Person person) {
+    public ResponseEntity<?> save(@RequestBody Person person) {
         LOG.info("/personer POST called {}", person);
 
         if (Objects.nonNull(person)) {
             try {
                 LOG.info("saving person to mongodb");
-                getPersonService().save(person);
+                Person out = getPersonService().save(person);
+
+                HttpHeaders hh = new HttpHeaders();
+                hh.set("MyLocation", "http://example.com/some/uri");
+                return new ResponseEntity<>(out, hh, HttpStatus.OK);
             } catch (Exception e) {
                 LOG.error("Ett fel inträffade", e);
+                return new ResponseEntity<String>(e.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
-            LOG.error("person is null and that is just not cool!");
+            String msg = "person is null and that is just not cool!";
+            LOG.info(msg);
+            return new ResponseEntity<String>(msg, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
     }
 

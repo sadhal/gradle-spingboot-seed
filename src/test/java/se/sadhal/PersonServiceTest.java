@@ -4,11 +4,9 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 
 //@RunWith(SpringRunner.class)
@@ -22,6 +20,7 @@ public class PersonServiceTest {
         List<Person> personer = service.findAll();
         Assert.assertEquals(1, personer.size());
         Assert.assertEquals("sadhal", personer.get(0).getLastName());
+        Assert.assertNotNull(personer.get(0).getId());
     }
 
     @Test
@@ -31,10 +30,17 @@ public class PersonServiceTest {
         List<Person> personer = service.findAll();
         Assert.assertEquals(1, personer.size());
         Document document = new Document("firstName", "Rimdas")
-                .append("lastName", "halsad")
-                .append("_id", new ObjectId(new Date(), 2));
+                .append("lastName", "halsad");
+              //  .append("_id", new ObjectId(new Date(), 2));
         Person person = new Person(document);
-        service.save(person);
+
+        // Execute
+        Person personWithId = service.save(person);
+
+        // Verify 1
+        Assert.assertNotNull(personWithId.getId());
+
+        // Verify 2
         personer = service.findAll();
         Assert.assertEquals(2, personer.size());
         Assert.assertEquals("halsad", personer.get(1).getLastName());

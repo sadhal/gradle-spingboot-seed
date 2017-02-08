@@ -35,8 +35,9 @@ public class PersonService {
         return personer;
     }
 
-    public void save(Person person) {
+    public Person save(Person person) {
         Document doc = person.createDocument();
         collection.insertOne(doc);
+        return new Person(doc);
     }
 }
