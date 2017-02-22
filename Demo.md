@@ -1,5 +1,5 @@
 # gradle-spingboot-seed
-This project is an application skeleton for a typical spring boot web app that is built with gradle. You can use itto quickly bootstrap your webapp projects and dev environment for these projects.
+This project is an application skeleton for a typical spring boot web app that is built with gradle. You can use it to quickly bootstrap your webapp projects and dev environment for these projects.
 The seed contains a sample spring boot application exposing http resources on port 8080.
 
 The seed app doesn't do much, by default it is listening on path ```/hello``` and returns a String value.
@@ -18,7 +18,7 @@ oc new-project contacts-be-dev
 
 ```
 
-### Demo database
+### Demo database (NoSQL, Mongodb)
 
 ```
 # Create new mongodb-ephemeral from template. It will create mongodb app in contacts-be-dev
@@ -28,15 +28,15 @@ oc new-app https://raw.githubusercontent.com/sadhal/openshift-config/master/mong
 oc rollout latest mongodb
 
 ```
-### Demo back end app
+### Demo back end app (Java 8, Gradle, REST, Spring)
 
 ```
-# Create new RESTful API backed up by Springboo.
+# Create new RESTful API backed up by Springboot.
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
 
 ```
 
-### Demo frontend app
+### Demo frontend app (Angularjs, Nodejs)
 
 ```
 # Create new angularjs app backed up by nodejs
