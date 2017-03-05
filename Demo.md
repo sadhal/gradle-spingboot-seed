@@ -36,6 +36,14 @@ oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-s
 
 ```
 
+### Demo AMQP app (RabbitMQ)
+
+```
+# Create an ephemeral RabbitMQ app
+oc new-app luiscoms/openshift-rabbitmq:management
+
+```
+
 ### Demo frontend app (Angularjs, Nodejs)
 
 ```
