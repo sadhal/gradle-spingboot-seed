@@ -68,6 +68,7 @@ oc expose service gradle-spingboot-seed --path=/hello
 # Create jenkins pipeline
 oc project jenkins
 oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
+# or create BuildConfig from Web Console
 
 ```
 
