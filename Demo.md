@@ -40,7 +40,7 @@ oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-s
 
 ```
 # Create new angularjs app backed up by nodejs
-oc new-app https://github.com/sadhal/mean-contactlist.git
+oc new-app https://github.com/sadhal/mean-contactlist.git -p DEBUG="contacts-fe,express* node server.js" -p LOG_LEVEL=verbose
 oc expose svc mean-contactlist
 
 ```
