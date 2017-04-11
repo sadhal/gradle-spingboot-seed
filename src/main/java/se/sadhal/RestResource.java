@@ -80,12 +80,12 @@ public class RestResource {
 
     @RequestMapping(value = "/personer", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> save(@RequestBody Person person) {
-        LOG.info("/personer POST called {}", person);
+    public ResponseEntity<?> save(@RequestHeader(value="X-Correlation-ID") String corrId, @RequestBody Person person) {
+        LOG.info("{} /personer POST called {}", corrId, person);
 
         if (Objects.nonNull(person)) {
             try {
-                LOG.info("saving person to mongodb");
+                LOG.info("{} saving person to mongodb", corrId);
                 Person out = getPersonService().save(person);
 
                 HttpHeaders hh = new HttpHeaders();
@@ -93,12 +93,12 @@ public class RestResource {
                 hh.setContentType(MediaType.APPLICATION_JSON);
                 return new ResponseEntity<>(out, hh, HttpStatus.OK);
             } catch (Exception e) {
-                LOG.error("Ett fel inträffade", e);
+                LOG.error("{} Ett fel inträffade", corrId, e);
                 return new ResponseEntity<String>(e.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             String msg = "person is null and that is just not cool!";
-            LOG.info(msg);
+            LOG.info("{} " + msg, corrId);
             return new ResponseEntity<String>(msg, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
     }

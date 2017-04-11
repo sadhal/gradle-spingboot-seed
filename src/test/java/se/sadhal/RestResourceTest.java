@@ -62,7 +62,7 @@ public class RestResourceTest {
         person.setFirstName("f");
         person.setLastName("l");
         person.setEmail("e");
-        ResponseEntity<?> xs = rr.save(person);
+        ResponseEntity<?> xs = rr.save("corrId-0", person);
         Assert.assertTrue(xs.getStatusCode().is2xxSuccessful());
     }
 
@@ -70,7 +70,7 @@ public class RestResourceTest {
     public void test_saveBadRequest() {
         RestResource rr = new RestResource();
 
-        ResponseEntity<?> xs = rr.save(null);
+        ResponseEntity<?> xs = rr.save("corrId-1",null);
         Assert.assertTrue(xs.getStatusCode().is4xxClientError());
     }
 
@@ -85,7 +85,7 @@ public class RestResourceTest {
         person.setFirstName("f");
         person.setLastName("l");
         person.setEmail("e");
-        ResponseEntity<?> xs = rr.save(person);
+        ResponseEntity<?> xs = rr.save("corrId-2", person);
         Assert.assertTrue(xs.getStatusCode().is5xxServerError());
     }
 }
