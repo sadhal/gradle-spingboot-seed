@@ -54,25 +54,27 @@ oc new-project jenkins
 # Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
 oc new-app --template=jenkins-ephemeral -n jenkins
 
+# Create our back end demo app in Q&A in order to show CI/CD pipeline
+oc project contacts-be-test
+oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
+
 # Log in as system:admin in CLI in order to edit user policies for jenkins:
 oc login -u system:admin
 oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-be-dev
 oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-be-test
-oc login -u developer -p developer
-
-# Create our back end demo app in Q&A in order to show CI/CD pipeline
-oc project contacts-be-test
-oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
-oc expose service gradle-spingboot-seed --path=/hello
+oc login -u sadhal -p sadhal
 
 # Create jenkins pipeline
-oc project jenkins
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
-# or create BuildConfig from Web Console
-
+# In Web Console, jenkins project, click on Add to Project -> Import YAML/JSON -> choose appropriate BuildConfig -> Create
 ```
 
 
 ### Prerequisites
 Latest openshift origin CLI client (>= 1.4), docker (>= 1.12) and virtualization enabled.
 
+### CLI creation of pipeline for oc ver 1.5
+```
+# Create jenkins pipeline
+oc project jenkins
+oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
+```
