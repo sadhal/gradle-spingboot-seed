@@ -59,12 +59,12 @@ public class RestResource {
     }
 
     @RequestMapping(value = "/personer", method = RequestMethod.GET)
-    public ResponseEntity<?> personer() {
-        LOG.info("/personer called");
+    public ResponseEntity<?> personer(@RequestHeader(value="X-Correlation-ID") String corrId) {
+        LOG.info("{} /personer called with correlationId", corrId);
 
 
         try {
-            LOG.info("fetching personer från mongodb");
+            LOG.info("{} fetching personer från mongodb", corrId);
             List<Person> personer = getPersonService().findAll();
 
             HttpHeaders hh = new HttpHeaders();
@@ -73,7 +73,7 @@ public class RestResource {
             return new ResponseEntity<List<Person>>(personer, hh, HttpStatus.OK);
 
         } catch (Exception e) {
-            LOG.error("Ett fel inträffade", e);
+            LOG.error("{} Ett fel inträffade {}", corrId, e);
             return new ResponseEntity<String>(e.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

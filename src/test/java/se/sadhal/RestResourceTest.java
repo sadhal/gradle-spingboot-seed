@@ -37,7 +37,7 @@ public class RestResourceTest {
         rr.setPersonService(ps);
 
         Mockito.when(ps.findAll()).thenReturn(new ArrayList<>());
-        ResponseEntity<?> xs = rr.personer();
+        ResponseEntity<?> xs = rr.personer("1234.corrid.5678.boom.1");
         Assert.assertTrue(xs.getStatusCode().is2xxSuccessful());
     }
 
@@ -47,7 +47,7 @@ public class RestResourceTest {
         rr.setPersonService(ps);
 
         Mockito.when(ps.findAll()).thenThrow(NullPointerException.class);
-        ResponseEntity<?> xs = rr.personer();
+        ResponseEntity<?> xs = rr.personer("1234.corrid.5678.boom.2");
         Assert.assertTrue(xs.getStatusCode().is5xxServerError());
     }
 
