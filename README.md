@@ -14,15 +14,15 @@ oc cluster up
 
 # Log in as developer in to the Web Console and CLI. Links and instructions are provided by oc cluster up command.
 # Create development project for demo:
-oc new-project contacts-be-dev
+oc new-project contacts-dev
 
 ```
 
 ### Demo database (NoSQL, Mongodb)
 
 ```
-# Create new mongodb-ephemeral from template. It will create mongodb app in contacts-be-dev
-oc new-app https://raw.githubusercontent.com/sadhal/openshift-config/master/mongodb-ephemeral-template.json -p MONGODB_DATABASE=sampledb -p MONGODB_USER=sadhal -p MONGODB_PASSWORD=sadhal -n contacts-be-dev
+# Create new mongodb-ephemeral from template. It will create mongodb app in contacts-dev
+oc new-app https://raw.githubusercontent.com/sadhal/openshift-config/master/mongodb-ephemeral-template.json -p MONGODB_DATABASE=sampledb -p MONGODB_USER=sadhal -p MONGODB_PASSWORD=sadhal -n contacts-dev
 
 # Start deployment
 oc rollout latest mongodb
@@ -32,7 +32,7 @@ oc rollout latest mongodb
 
 ```
 # Create new RESTful API backed up by Springboot.
-oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
+oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed
 
 ```
 
@@ -48,33 +48,32 @@ oc expose svc mean-contactlist
 ## Setting up Q&A and CI/CD projects
 ```
 # Create projects:
-oc new-project contacts-be-test
+oc new-project contacts-test
 oc new-project jenkins
 
 # Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
 oc new-app --template=jenkins-ephemeral -n jenkins
 
 # Create our back end demo app in Q&A in order to show CI/CD pipeline
-oc project contacts-be-test
-oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed#pipelines
+oc project contacts-test
+oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed
 
 # Log in as system:admin in CLI in order to edit user policies for jenkins:
 oc login -u system:admin
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-be-dev
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-be-test
-oc login -u sadhal -p sadhal
+oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-dev
+oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-test
+oc login -u developer -p developer
 
 # Create jenkins pipeline
 # In Web Console, jenkins project, click on Add to Project -> Import YAML/JSON -> choose appropriate BuildConfig -> Create
 ```
-
-
-### Prerequisites
-Latest openshift origin CLI client (>= 1.4), docker (>= 1.12) and virtualization enabled.
-
 ### CLI creation of pipeline for oc ver 1.5
 ```
 # Create jenkins pipeline
 oc project jenkins
-oc new-app https://github.com/sadhal/gradle-spingboot-seed#pipelines --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
+oc new-app https://github.com/sadhal/gradle-spingboot-seed --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
 ```
+
+### Prerequisites
+Latest openshift origin CLI client (>= 1.4), docker (>= 1.12) and virtualization enabled.
+
