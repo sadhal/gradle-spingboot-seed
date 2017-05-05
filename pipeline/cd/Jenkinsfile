@@ -16,6 +16,10 @@ node('maven') {
     echo 'starting ./gradlew test'
     sh './gradlew test'
   }
+  stage('Static analysis') {
+    echo 'starting ./gradlew sonarqube'
+    sh './gradlew sonarqube'
+  }
   stage('Build image') { 
     sh 'ls -la'
     openshiftBuild(buildConfig: appName, showBuildLogs: 'true', namespace: projectDev)
