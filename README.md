@@ -46,7 +46,7 @@ We will use template file which describes configuration objects for Jenkins, Son
 ```
 oc process -f https://raw.githubusercontent.com/sadhal/gradle-spingboot-seed/master/oc-templates/cicd_svc-dc-rc.yaml | oc create -f -
 ```
-### Create only jenkins
+### Or, create jenkins only
 Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
 ```
 oc new-app --template=jenkins-ephemeral -n jenkins
@@ -72,7 +72,7 @@ oc project jenkins
 oc new-app https://github.com/sadhal/gradle-spingboot-seed --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
 ```
 
-### Create jenkins pipeline manually (for oc ver < 1.5)
+### Or, create jenkins pipeline manually (for oc ver < 1.5)
 In Web Console, jenkins project, click on Add to Project -> Import YAML/JSON -> choose file pipelines/cd/BuildConfig -> Create
 
 ### Prerequisites
