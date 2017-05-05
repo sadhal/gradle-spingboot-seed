@@ -1,8 +1,8 @@
-def projectName = 'contacts-be'
+def projectName = 'contacts'
 def projectDev  = projectName + '-dev'
 def projectTest = projectName + '-test'
 def appName = 'gradle-spingboot-seed'
-def gitBranch = 'pipelines'
+def gitBranch = 'master'
 def gitRepoUrl = 'https://github.com/sadhal/gradle-spingboot-seed.git'
 
 node('maven') {
@@ -11,15 +11,33 @@ node('maven') {
     sh 'ls -la'
     sh 'env | sort'
   }
-  stage('Checkout and Unit test') {
+  stage('Checkout and build') {
     git branch: gitBranch, url: gitRepoUrl
+    echo 'starting ./gradlew build'
+    sh './gradlew build'
+  }
+  stage ('Test and Analysis') {
+     parallel (
+         'Test': {
+             echo 'starting ./gradlew test'
+             sh './gradlew test'
+             step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+         },
+         'Static Analysis': {
+             //sh "${mvnCmd} jacoco:report sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -DskipTests=true"
+             echo 'starting ./gradlew sonarqube'
+             sh './gradlew sonarqube -Dsonar.host.url=http://sonarqube:9000'
+         }
+     )
+  } /*
+  stage('Test and static analysis') {
     echo 'starting ./gradlew test'
     sh './gradlew test'
   }
   stage('Static analysis') {
     echo 'starting ./gradlew sonarqube'
     sh './gradlew sonarqube -Dsonar.host.url=http://sonarqube:9000'
-  }
+  } */
   stage('Build image') { 
     sh 'ls -la'
     openshiftBuild(buildConfig: appName, showBuildLogs: 'true', namespace: projectDev)
