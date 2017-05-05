@@ -10,6 +10,7 @@ gradlew.bat
 .project
 .settings
 .springBeans
+.target
 
 ### IntelliJ IDEA ###
 .idea

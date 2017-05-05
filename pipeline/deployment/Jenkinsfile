@@ -1,0 +1,52 @@
+node('maven') {
+  def appName="gradle-spingboot-seed"
+  def project="deployment"
+  def tag="blue"
+  def altTag="green"
+  stage("Initialize") {
+    sh "oc get route ${appName} -n ${project} -o jsonpath='{ .spec.to.firstName }' > activeservice"
+    activeService = readFile('activeservice').trim()
+    if (activeService == "${appName}-blue") {
+      tag = "green"
+      altTag = "blue"
+    }
+  }
+  stage('Build image') {
+    echo "building tag ${tag}"
+    openshiftBuild(buildConfig: appName, showBuildLogs: 'true', namespace: project)
+  }
+  stage("Deploy Test") {
+    openshiftTag srcStream: appName, srcTag: 'latest', destinationStream: appName, destinationTag: tag, namespace: project
+    openshiftVerifyDeployment deploymentConfig: "${appName}-${tag}", namespace: project
+  }
+  stage("Test") {
+    sh "oc get route ${appName}-${tag} -n ${project} -o jsonpath='{ .spec.host }' > routehost"
+    routeHost = readFile('routehost').trim()
+    echo "routeHost: " + routeHost
+    routeHost = routeHost + "/hello"
+    input message: "Test deployment: http://${routeHost}. Approve?", id: "approval"
+  }
+  stage("Go Live") {
+    sh "oc set -n ${project} route-backends ${appName} ${appName}-${tag}=100 ${appName}-${altTag}=0"
+  }
+  /*
+  stage('Deploy DEV') {
+    openshiftDeploy(deploymentConfig: appName, namespace: projectDev, destinationTag: tag)
+    openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectDev)
+  }
+  stage('Tag docker image') {
+    openshiftTag(namespace: projectDev, sourceStream: appName, sourceTag: 'latest', destinationNamespace: projectTest, destinationStream: appName, destinationTag: tag)
+  }
+  stage('Deploy QA') {
+    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-test')'
+    openshiftVerifyDeployment(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-test')
+    openshiftVerifyDeployment deploymentConfig: "${appName}-${tag}"
+  }
+  stage('Approval') {
+    input message: "Test deployment: http://${routeHost}. Approve?", id: "approval"
+  }
+  stage("Go Live") {
+    sh "oc set -n ${projectTest} route-backends ${appName} ${appName}-${tag}=100 ${appName}-${altTag}=0"
+  }
+  */
+}

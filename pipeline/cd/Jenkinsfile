@@ -1,0 +1,64 @@
+def projectName = 'contacts-be'
+def projectDev  = projectName + '-dev'
+def projectTest = projectName + '-test'
+def appName = 'gradle-spingboot-seed'
+def gitBranch = 'pipelines'
+def gitRepoUrl = 'https://github.com/sadhal/gradle-spingboot-seed.git'
+
+node('maven') {
+  stage('Greeting') {
+    echo 'hello from pipeline'
+    sh 'ls -la'
+    sh 'env | sort'
+  }
+  stage('Checkout and Unit test') {
+    git branch: gitBranch, url: gitRepoUrl
+    echo 'starting ./gradlew test'
+    sh './gradlew test'
+  }
+  stage('Static analysis') {
+    echo 'starting ./gradlew sonarqube'
+    sh './gradlew sonarqube -Dsonar.host.url=http://sonarqube:9000'
+  }
+  stage('Build image') { 
+    sh 'ls -la'
+    openshiftBuild(buildConfig: appName, showBuildLogs: 'true', namespace: projectDev)
+  }
+  stage('Deploy DEV') {
+    openshiftDeploy(deploymentConfig: appName, namespace: projectDev)
+    echo 'Verifying deployment'
+    openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectDev)
+  }
+  stage('Integration tests') {
+    echo 'Run HTTP-api integration tests with tools such as Cornichon'
+  }
+  stage('Performance tests') {
+    echo 'Run perf tests with tools such as Gattling'
+  }
+  stage('Tag docker image') {
+    openshiftTag(namespace: projectDev, sourceStream: appName, sourceTag: 'latest', destinationNamespace: projectTest, destinationStream: appName, destinationTag: 'latest')
+  }
+  stage('Deploy QA') {
+    openshiftDeploy(deploymentConfig: appName, namespace: projectTest)
+    echo 'Verifying deployment' + appName
+    openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectTest)
+  }
+}
+/*
+  parallel(
+    'Stream integration tests' : { 
+      node('maven') {
+        echo 'echo from integration tests stream'
+        sh "sleep 20s" 
+        sh "echo stream1"
+      } 
+    },
+    'Stream perf tests' : { 
+      node('maven') {
+        echo 'echo from perf tests stream'
+        sh "sleep 10s" 
+        sh "echo stream2"                                                   
+      } 
+    }
+  )
+*/

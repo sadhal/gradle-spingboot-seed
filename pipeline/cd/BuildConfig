@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  annotations:
+    pipeline.alpha.openshift.io/uses: '[{"name": "gradlespringboot-pipeline-cd", "namespace": "jenkins", "kind": "DeploymentConfig"}]'
+  creationTimestamp: null
+  labels:
+    name: cd-pipeline
+  name: cd-pipeline
+spec:
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        def projectName = 'contacts-be'
+        def projectDev  = projectName + '-dev'
+        def projectTest = projectName + '-test'
+        def appName = 'gradle-spingboot-seed'
+        def gitBranch = 'pipelines'
+        def gitRepoUrl = 'https://github.com/sadhal/gradle-spingboot-seed.git'
+        node('maven') {
+          stage('Greeting') {
+            echo 'hello from pipeline'
+            sh 'ls -la'
+            sh 'env | sort'
+          }
+          stage('Checkout and Unit test') {
+            git branch: gitBranch, url: gitRepoUrl
+            echo 'starting ./gradlew test'
+            sh './gradlew test'
+          }
+          stage('Build image') { 
+            sh 'ls -la'
+            openshiftBuild(buildConfig: appName, showBuildLogs: 'true', namespace: projectDev)
+          }
+          stage('Deploy DEV') {
+            openshiftDeploy(deploymentConfig: appName, namespace: projectDev)
+            echo 'Verifying deployment'
+            openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectDev)
+          }
+          stage('Integration tests') {
+            echo 'Run HTTP-api integration tests with tools such as Cornichon'
+          }
+          stage('Performance tests') {
+            echo 'Run perf tests with tools such as Gattling'
+          }
+          stage('Tag docker image') {
+            openshiftTag(namespace: projectDev, sourceStream: appName, sourceTag: 'latest', destinationNamespace: projectTest, destinationStream: appName, destinationTag: 'latest')
+          }
+          stage('Deploy QA') {
+            openshiftDeploy(deploymentConfig: appName, namespace: projectTest)
+            echo 'Verifying deployment' + appName
+            openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectTest)
+          }
+        }
+    type: JenkinsPipeline

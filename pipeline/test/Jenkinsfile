@@ -1,0 +1,12 @@
+node('maven') {
+  stage('Greeting') {
+    echo 'hello from pipeline'
+    sh 'ls -la'
+  }
+  stage('Tag') {
+    openshiftTag(namespace: 'contacts-dev', sourceStream: 'gradle-spingboot-seed', sourceTag: 'latest', destinationNamespace: 'contacts-test', destinationStream: 'gradle-spingboot-seed', destinationTag: 'latest')
+  }
+  stage('Deploy') {
+    openshiftDeploy(deploymentConfig: 'gradle-spingboot-seed', namespace: 'contacts-test')
+  }
+}
