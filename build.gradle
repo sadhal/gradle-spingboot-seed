@@ -11,6 +11,13 @@ buildscript {
 	}
 }
 
+plugins {
+	id "org.sonarqube" version "6.0"
+}
+sonarqube {
+	properties {
+		property "systemProp.sonar.host.url", "http://sonarqube:9000"
+
 group = 'sadhal'
 
 apply plugin: 'java'
