@@ -17,6 +17,8 @@ plugins {
 sonarqube {
 	properties {
 		property "systemProp.sonar.host.url", "http://sonarqube:9000"
+	}
+}
 
 group = 'sadhal'
 
