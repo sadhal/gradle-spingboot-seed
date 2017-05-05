@@ -46,30 +46,39 @@ oc expose svc mean-contactlist
 ```
 
 ## Setting up Q&A and CI/CD projects
+
+### Create projects:
 ```
-# Create projects:
 oc new-project contacts-test
 oc new-project jenkins
-
-# Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
+```
+### Create only jenkins
+Enter the jenkins project from Web Console. Add to project - jenkins pipeline. Even ephemeral works for this demo. Or from CLI:
+```
 oc new-app --template=jenkins-ephemeral -n jenkins
-
-# Create our back end demo app in Q&A in order to show CI/CD pipeline
+```
+### Create Jenkins, SonarQube with Postgresql
+```
+oc process -f https://raw.githubusercontent.com/sadhal/gradle-spingboot-seed/master/oc-templates/cicd_svc-dc-rc.yaml | oc create -f -
+```
+### Create our back end demo app in Q&A in order to show CI/CD pipeline
+```
 oc project contacts-test
 oc new-app jorgemoralespou/s2i-java~https://github.com/sadhal/gradle-spingboot-seed
-
-# Log in as system:admin in CLI in order to edit user policies for jenkins:
+```
+### Set policies through roles
+Log in as system:admin in CLI in order to edit user policies for jenkins:
+```
 oc login -u system:admin
 oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-dev
 oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n contacts-test
 oc login -u developer -p developer
+```
+### Create jenkins pipeline manually
+In Web Console, jenkins project, click on Add to Project -> Import YAML/JSON -> choose appropriate BuildConfig -> Create
 
-# Create jenkins pipeline
-# In Web Console, jenkins project, click on Add to Project -> Import YAML/JSON -> choose appropriate BuildConfig -> Create
+### Create jenkins pipeline through CLI (for oc ver >= 1.5)
 ```
-### CLI creation of pipeline for oc ver 1.5
-```
-# Create jenkins pipeline
 oc project jenkins
 oc new-app https://github.com/sadhal/gradle-spingboot-seed --strategy=pipeline --context-dir='pipeline/cd' --name gradlespringboot-pipeline-cd
 ```
