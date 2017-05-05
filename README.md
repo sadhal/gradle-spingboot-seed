@@ -52,6 +52,11 @@ Enter the jenkins project from Web Console. Add to project - jenkins pipeline. E
 oc new-app --template=jenkins-ephemeral -n jenkins
 ```
 
+### Expose Jenkins and SonarQube services to the world outside our cluster
+```
+oc expose svc jenkins sonarqube
+```
+
 ### Create our back end demo app in Q&A in order to show CI/CD pipeline
 ```
 oc project contacts-test
