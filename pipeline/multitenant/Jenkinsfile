@@ -1,0 +1,63 @@
+def projectName = 'contacts'
+def projectDev  = projectName + '-dev'
+def projectTest = projectName + '-test'
+def appName = 'gradle-spingboot-seed'
+def gitBranch = 'pipeline-multitenant-mode'
+def gitRepoUrl = 'https://github.com/sadhal/gradle-spingboot-seed.git'
+
+
+podTemplate(label: 'maven_2', inheritFrom: 'maven', namespace: projectTest) {
+  node('maven_2') {
+    stage('Greeting from namespace ' + projectTest) {
+      echo 'hello from namespace ' + projectTest
+      sh 'ls -la'
+      sh 'env | sort'
+      sh 'sleep 20'
+      echo 'moving on...'
+    }
+  }
+
+  node('maven') {
+    stage('Greeting') {
+      echo 'hello from pipeline'
+      sh 'ls -la'
+      sh 'env | sort'
+    }
+    stage('Checkout and build') {
+      git branch: gitBranch, url: gitRepoUrl
+      echo 'starting ./gradlew build'
+      sh './gradlew build'
+    }
+    stage('Build image') { 
+      sh 'ls -la'
+      openshiftBuild(buildConfig: appName, showBuildLogs: 'true', namespace: projectDev)
+    }
+    stage('Deploy DEV') {
+      openshiftDeploy(deploymentConfig: appName, namespace: projectDev)
+      echo 'Verifying deployment'
+      openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectDev)
+    }
+  }
+
+  node('maven_2') {
+    stage('Integration tests') {
+      echo 'Run HTTP-api integration tests with tools such as Cornichon'
+      sh 'sleep 10'
+    }
+    stage('Performance tests') {
+      echo 'Run perf tests with tools such as Gattling'
+      sh 'sleep 20'
+    }
+  }
+
+  node('maven') {  
+    stage('Tag docker image') {
+      openshiftTag(namespace: projectDev, sourceStream: appName, sourceTag: 'latest', destinationNamespace: projectTest, destinationStream: appName, destinationTag: 'latest')
+    }
+    stage('Deploy QA') {
+      openshiftDeploy(deploymentConfig: appName, namespace: projectTest)
+      echo 'Verifying deployment' + appName
+      openshiftVerifyDeployment(deploymentConfig: appName, namespace: projectTest)
+    }
+  }
+}
