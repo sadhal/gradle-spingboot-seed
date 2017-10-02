@@ -6,7 +6,7 @@ def gitBranch = 'pipeline-multitenant-mode'
 def gitRepoUrl = 'https://github.com/sadhal/gradle-spingboot-seed.git'
 
 
-podTemplate(label: 'maven_2', inheritFrom: 'maven', namespace: projectTest) {
+podTemplate(label: 'maven_2', inheritFrom: 'maven', namespace: projectTest, cloud: 'openshift') {
   node('maven_2') {
     stage('Greeting from namespace ' + projectTest) {
       echo 'hello from namespace ' + projectTest
